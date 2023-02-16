@@ -1,6 +1,12 @@
-const User = require('../models/User')
-const bcrypt = require('bcrypt')
+const User = require('../models/User');
+const bcrypt = require('bcrypt');
+const jwt = require('../lib/jsonwebtoken');
+
+const SECRET = 'SOMESECRETSECRET'
+
 exports.findByUsername = (username) => User.findOne({username});
+exports.findByEmail = (email) => User.findOne({email});
+
 exports.register = async (username, email, password, repeatPassword) => {
     if(password !== repeatPassword){
         throw new Error('Password missmatch!');
@@ -17,6 +23,24 @@ exports.register = async (username, email, password, repeatPassword) => {
     await User.create({username, email, password: hashedPassword });
 };
 
-exports.login = (email, password) => {
+exports.login = async (email, password) => {
+    const user = await this.findByEmail(email)
 
+    if(!user){
+        throw new Error("Invalid email or password!")
+    }
+
+    const isValid = await bcrypt.compare(user.password, password);
+
+    if(!isValid){
+        throw new Error("Invalid email or password!")
+    }
+    const payload = {
+        _id: user._id,
+        email,
+        username: user.username,
+    }
+    const token = await jwt.sign(payload, SECRET);
+
+    return token;
 };
