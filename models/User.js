@@ -14,16 +14,6 @@ const userSchema = new mongoose.Schema({
         type: String,
         required: true,
     }
-}, {
-    virtuals:{
-        repeatPassword: {
-            set(value){
-                if(this.password !== value){
-                    throw new mongoose.MongooseError('Password missmatch!')
-                } 
-            }
-        }
-    }
 });
 
 // userSchema.virtual('repeatPassword').set(function(value){
