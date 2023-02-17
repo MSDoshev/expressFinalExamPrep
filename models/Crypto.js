@@ -4,18 +4,22 @@ const cryptoSchema = new mongoose.Schema({
 
     name: {
         type: String,
+        minLength: [2, 'Name should be at least 2 characters long.'],
         required: true,
     },
     image: {
         type: String,
         required: true,
+        validate: /https?^:\/\//,
     },
     price: {
         type: Number,
+        min: 0,
         required: true,
     },
     description: {
         type: String,
+        minLength: [10, 'Description should be at least 10 characters long.'],
         required: true,
     },
     paymentMethod: {

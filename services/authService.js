@@ -44,6 +44,9 @@ exports.login = async (email, password) => {
         email,
         username: user.username,
     }
+    if(password.length < 4){
+        throw new Error('Password is too short!')
+    }
     const token = await jwt.sign(payload, SECRET);
 
     return token;

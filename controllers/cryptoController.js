@@ -2,11 +2,18 @@ const router = require('express').Router();
 const {isAuthorized} = require('../middlewares/authenticationMiddleware')
 const cryptoService = require('../services/cryptoService')
 const {getErrorMessage} = require('../utils/errorUtils')
-const {paymentMethodsMap} = require('../constants')
+const {getPaymentMethodViewData} = require('../utils/viewDataUtils')
 router.get('/catalog', async (req, res) =>{
     const crypto = await cryptoService.getAll();
 
 res.render('crypto/catalog', {crypto});
+});
+
+router.get('/search', async (req, res) =>{
+    const {name, paymentMethod} = req.query;
+    const crypto = await cryptoService.search(name, paymentMethod);
+    const paymentMethods = getPaymentMethodViewData(paymentMethod);
+    res.render('crypto/search', {crypto, paymentMethods, name});
 });
 
 router.get('/:cryptoId/details', async (req, res) =>{
@@ -26,12 +33,7 @@ router.get('/:cryptoId/buy',isAuthorized, async (req, res) =>{
 router.get('/:cryptoId/edit', isAuthorized, async (req, res) => {
     const crypto = await cryptoService.getOne(req.params.cryptoId);
     
-    const paymentMethods = Object.keys(paymentMethodsMap).map(value => ({
-        value, 
-        label: paymentMethodsMap[value],
-        isSelected: crypto.paymentMethod == value,
-    }));
-
+    const paymentMethods = getPaymentMethodViewData(crypto.paymentMethod);
 
     res.render('crypto/edit', {crypto, paymentMethods});
 });
