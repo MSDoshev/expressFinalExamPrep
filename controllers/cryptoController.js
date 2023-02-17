@@ -46,9 +46,10 @@ router.post('/:cryptoId/edit', isAuthorized, async (req, res) => {
    
 });
 
-router.get('/cryptoId/delete', isAuthorized, async (req, res) => {
+router.get('/:cryptoId/delete', isAuthorized, async (req, res) => {
     //TODO delete 
-    res.redirect('crypto/catalog')
+    await cryptoService.delete(req.params.cryptoId);
+    res.redirect('/crypto/catalog')
 });
 router.get('/create',isAuthorized, (req, res) =>{
     res.render('crypto/create')

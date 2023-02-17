@@ -12,3 +12,5 @@ exports.create = (ownerId, cryptoData) =>Crypto.create({...cryptoData, owner: ow
 
 exports.edit = (cryptoId, cryptoData) =>Crypto.findByIdAndUpdate(cryptoId, cryptoData);
 
+exports.delete = (cryptoId) =>Crypto.findByIdAndDelete(cryptoId);
+
