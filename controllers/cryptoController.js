@@ -7,7 +7,19 @@ router.get('/catalog', async (req, res) =>{
     const crypto = await cryptoService.getAll();
 
 res.render('crypto/catalog', {crypto});
-})
+});
+
+router.get('/:cryptoId/details', async (req, res) =>{
+    const crypto = await cryptoService.getOne(req.params.cryptoId)
+
+    const isOwner = crypto.owner == req.user?._id;
+
+    res.render('crypto/details', {crypto, isOwner})
+});
+
+router.get('/:cryptoId/buy', (req, res) =>{
+    
+});
 
 router.get('/create',isAuthorized, (req, res) =>{
     res.render('crypto/create')
