@@ -17,6 +17,7 @@ exports.search = async (name, paymentMethod) => {
    return crypto;
 }
 exports.buy = async (userId, cryptoId) => {
+   // Crypto.findByIdAndUpdate(cryptoId, {$push: {buyers: userId}})
    const crypto = await Crypto.findById(cryptoId);
    //check if user has already bought the crypto
    crypto.buyers.push(userId);
