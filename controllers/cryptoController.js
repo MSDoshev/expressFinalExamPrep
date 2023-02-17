@@ -9,7 +9,7 @@ router.post('/create',isAuthorized, async(req, res) =>{
     const cryptoData = req.body;
     try {
         
-        await cryptoService.create(cryptoData);
+        await cryptoService.create(req.user._id, cryptoData);
         res.redirect('/crypto/catalog')
     } catch (error) {
         return res.status(400).render('crypto/create', {error: getErrorMessage(error)})
