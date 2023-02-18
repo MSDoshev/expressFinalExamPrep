@@ -42,10 +42,18 @@ router.get('/:cryptoId/edit', isAuthorized, async (req, res) => {
     res.render('crypto/edit', {crypto, paymentMethods});
 });
 router.post('/:cryptoId/edit', isAuthorized, async (req, res) => {
-    const cryptoData = req.body
-    //TODO edit 
-    await cryptoService.edit(req.params.cryptoId, cryptoData);
+    const cryptoData = req.body;
+    const crypto = await cryptoService.getOne(req.params.cryptoId);
 
+    //TODO edit 
+    try {
+        
+        await cryptoService.edit(req.params.cryptoId, cryptoData);
+    } catch (error) {
+        return res.status(400).render(`book/edit`,  {crypto, error: getErrorMessage(error)})
+    }
+
+    
     //check if owner
     res.redirect(`/crypto/${req.params.cryptoId}/details`)
 
